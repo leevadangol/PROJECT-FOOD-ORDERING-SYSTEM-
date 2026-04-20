@@ -1,0 +1,193 @@
+/* ALL CSS */
+* {
+  margin: 0 0;
+  padding: 0 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  width: 65%;
+  margin: 0 auto;
+  padding: 1%;
+}
+
+.img-responsive {
+  width: 100%;
+  border-radius: 15px;
+}
+
+.img-curve {
+  border-radius: 40px;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-white {
+  color: white;
+}
+.clear-fix {
+  clear: both;
+  float: none;
+}
+
+a {
+  color: #f25d07; /* theme based color */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #f29f05;
+}
+
+.btn-order {
+ position: absolute;
+  right: 0;
+  top: 100%;
+  transform: translateY(-50%); /* vertically center */
+}
+
+.btn-primary {
+  background-color: #f25d07;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #f29f05;
+  color: white;
+}
+
+h2 {
+  color: #f25d07;
+  font-size: 2rem;
+  margin-bottom: 2%;
+}
+
+.float-container {
+  position: relative;
+}
+
+.float-text {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%); /* perfectly centers horizontally */
+}
+/* ALL CSS ENDS  */
+
+/* FOOD MENU  */
+.section-title {
+      color: #f29f05;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      font-size:x-large;
+}
+
+.food-menu {
+  background-color: #ececec;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 80px;
+  position: relative;
+}
+.food-menu-box {
+  width: 95%;
+  margin-bottom: 15px;
+  padding: 2%;
+  float: left;
+  background-color: white;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  clear:both;
+}
+
+.zoom-box {
+  transition: transform 0.3s ease;
+}
+.zoom-box:hover {
+  transform: scale(1.1); /* zoom in */
+}
+
+.food-menu-img {
+  width: 10%;
+  float: left;
+}
+
+.food-menu-disc {
+  width: 70%;
+  margin-left: 17%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-right: 110px;
+}
+
+.food-menu-disc .btn {
+  padding: 1%;
+  border: none;
+  font-size: small;
+  border-radius: 5px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+}
+.food-price {
+  font-size: medium;
+  margin: 1% 0;
+  font-weight: bold;
+}
+
+.food-detail {
+  font-size: small;
+  color: #747d3c;
+}
+
+/* FOOD MENU ENDS  */
+
+/* RESPONSIVE DESIGN  */
+@media only screen and (max-width: 768px) {
+  .btn {
+    width: 20%;
+    padding: 2%;
+  }
+  h2 {
+    margin-bottom: 10%;
+  }
+  .box {
+    width: 100%;
+    margin: 4% auto;
+  }
+  .food-menu {
+    padding: 20% 0;
+  }
+
+  .food-menu-box {
+    width: 90%;
+    padding: 5%;
+    margin-bottom: 5%;
+  }
+  .food-menu-img {
+    flex: 0 0 100%;
+    margin-bottom: 10px;
+  }
+
+  .food-menu-disc {
+    flex: 1 0 100%;
+    padding-right: 0;
+    flex-direction: column;
+  }
+  .food-menu-disc .btn {
+    position: relative;
+  }
+}
+/* RESPONSIVE DESIGN ENDS  */

@@ -1,0 +1,98 @@
+--Create database project
+CREATE DATABASE IF NOT EXISTS project;
+USE project;
+
+--Create table  -> signup_page
+CREATE TABLE signup_page (
+    c_id INT AUTO_INCREMENT PRIMARY KEY,
+    c_username VARCHAR(50),
+    email VARCHAR(100),
+    phone VARCHAR(15),
+    password VARCHAR(255)
+);
+
+-------------------------------------------------------------------------------------
+
+--Create table  -> foods
+CREATE TABLE foods (
+   f_id INT AUTO_INCREMENT PRIMARY KEY,
+    f_name VARCHAR(150) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    image VARCHAR(255) NOT NULL
+);
+--------------------------------------------
+--> foods -> insert value -> (BURGER)
+INSERT INTO foods (f_name, price, image)
+VALUES 	
+('CHEESE BURGER', 550.0, 'IMAGES/cheese.jpeg'),
+('BBQ BURGER', 550.0, 'IMAGES/bbq.jpeg'),
+('CHICKEN BURGER', 470.0, 'IMAGES/chicken.jpeg'),
+('FISH BURGER', 450.0, 'IMAGES/fish.jpeg'),
+('KETO BURGER', 450.0, 'IMAGES/keto.jpeg'),
+('PANEER BURGER', 450.0, 'IMAGES/Paneer.jpeg'),
+('VEG BURGER', 400.0, 'IMAGES/veg.jpeg')
+;
+-----------------------------------------------
+--> foods -> insert value -> (PIZZA)
+INSERT INTO foods (f_name, price, image)
+VALUES 	
+('PEPPERONIE PIZZA', 550.0, 'IMAGES/Pepperoni Pizza1.jpeg'),
+('CHICKEN PIZZA', 550.0, 'IMAGES/Chicken pizza.jpeg'),
+('MEAT LOVER PIZZA', 600.0, 'IMAGES/Meat Lover Pizza.jpeg'),
+('MUSHROOM PIZZA', 450.0, 'IMAGES/mushroom pizza.jpeg'),
+('VEG PIZZA', 400.0, 'IMAGES/Veg-pizza.jpeg'),
+('PINEAPPLE PIZZA', 400.0, 'IMAGES/pineapple pizza.jpeg')
+;
+
+-------------------------------------------------------------------------------------
+
+--Create table -> orders
+CREATE TABLE orders (
+    o_id INT AUTO_INCREMENT PRIMARY KEY,
+    c_name VARCHAR(100) NOT NULL,
+    table_no VARCHAR(10) NOT NULL,
+    contact VARCHAR(15) NOT NULL,
+    o_datetime DATETIME,
+    total_price DECIMAL(10,2) NOT NULL,
+status ENUM('Pending', 'Confirmed', 'Accepted', 'Ready', 'Completed', 'Cancelled') DEFAULT 'Pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Add c_id column to orders table
+ALTER TABLE orders 
+ADD COLUMN c_id INT AFTER o_id;
+
+-- Add foreign key constraint
+ALTER TABLE orders 
+ADD FOREIGN KEY (c_id) REFERENCES signup_page(c_id);
+
+-------------------------------------------------------------------------------------
+
+--Create table -> order_items
+CREATE TABLE order_items (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    o_id INT NOT NULL,
+    f_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (o_id) REFERENCES orders(o_id),
+    FOREIGN KEY (f_id) REFERENCES foods(f_id)
+);
+
+
+-------------------------------------------------------------------------------------
+
+--Create table -> admin
+CREATE TABLE admin (
+    a_id INT AUTO_INCREMENT PRIMARY KEY,
+    a_name VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE
+);
+
+--Insert in table -> admin
+INSERT INTO admin (a_name, password, email) VALUES
+('admin1', 'Qq!1qqqq', 'admin1@gmail.com'),
+('admin2', 'Qq!1qqqq', 'admin2@gmail.com');
+
+-------------------------------------------------------------------------------------
