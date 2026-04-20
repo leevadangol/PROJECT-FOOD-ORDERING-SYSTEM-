@@ -14,7 +14,6 @@ require_once "check_login.php";
 </head>
 
 <body>
-<p>Demo delete later</p>
   <section class="food-menu">
     <div class="container">
       <h2 class="text-center">BURGER</h2>
