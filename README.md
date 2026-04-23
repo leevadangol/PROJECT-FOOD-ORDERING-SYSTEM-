@@ -48,4 +48,4 @@ This project is still under development, so some features may not be fully funct
 It is being continuously improved as part of our learning process. Future updates will include more features and better performance.
 
 
-This project is done by Leeza Dangol and Leeva Dangol as our 4th semester project for BCA
+**This project is done by Leeza Dangol and Leeva Dangol as our 4th semester project for BCA**
