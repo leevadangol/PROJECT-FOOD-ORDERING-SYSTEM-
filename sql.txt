@@ -96,3 +96,16 @@ INSERT INTO admin (a_name, password, email) VALUES
 ('admin2', 'Qq!1qqqq', 'admin2@gmail.com');
 
 -------------------------------------------------------------------------------------
+
+-----------TEST--------
+
+CREATE TABLE cart (
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    food_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES signup_page(c_id) ON DELETE CASCADE,
+    FOREIGN KEY (food_id) REFERENCES foods(f_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_cart_item (customer_id, food_id)
+);
