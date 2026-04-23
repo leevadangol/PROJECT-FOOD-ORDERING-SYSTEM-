@@ -1,6 +1,6 @@
 **Food Ordering System**
 
-This project is a Food Ordering System developed as part of our 4th Semester BCA coursework.
+This project is a "Food Ordering System" developed as part of our 4th Semester BCA coursework.
 It is still a work in progress, and this repository is mainly used to track development and updates over time.
 
 
@@ -29,6 +29,7 @@ It is still a work in progress, and this repository is mainly used to track deve
 
 
 **Running the Project**
+- Download the project 
 - Install and open XAMPP
 - Start Apache and MySQL
 - Move the project folder to the htdocs directory
@@ -45,3 +46,6 @@ The MySQL script used in this project is available in the repository as <a href=
 
 This project is still under development, so some features may not be fully functional yet.
 It is being continuously improved as part of our learning process. Future updates will include more features and better performance.
+
+
+This project is done by Leeza Dangol and Leeva Dangol as our 4th semester project for BCA
