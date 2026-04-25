@@ -74,6 +74,9 @@ It is being continuously improved as part of our learning process. Future update
 
 ---
 
+<img width="1366" height="635" alt="Screenshot (59)" src="https://github.com/user-attachments/assets/0f63e684-0c70-4f48-93c2-50be3264f07e" />
+
+
 **Admin side**
 
 
