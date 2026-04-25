@@ -52,7 +52,9 @@ It is being continuously improved as part of our learning process. Future update
 
 **Preview:**
 
-<img width="458" height="620" alt="Screenshot 2025-12-29 003018" src="https://github.com/user-attachments/assets/027998d1-2656-4e61-a0e2-c87606d14c73" />
+**Client side**
+
+<img width="458" height="620" alt="Screenshot 2025-12-29 003018" src="https://github.com/user-attachments/assets/027998d1-2656-4e61-a0e2-c87606d14c73" />  
 
 ---
 
@@ -72,5 +74,6 @@ It is being continuously improved as part of our learning process. Future update
 
 ---
 
+**Admin side**
 
 
