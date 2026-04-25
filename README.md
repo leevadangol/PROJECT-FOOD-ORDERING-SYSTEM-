@@ -1,4 +1,4 @@
-**Food Ordering System**
+****Food Ordering System****
 
 This project is a "Food Ordering System" developed as part of our 4th Semester BCA coursework.
 It is still a work in progress, and this repository is mainly used to track development and updates over time.
@@ -50,6 +50,9 @@ It is being continuously improved as part of our learning process. Future update
 
 **This project is done by Leeza Dangol and Leeva Dangol as our 4th semester project for BCA**
 
+---
+---
+
 **Preview:**
 
 **Client side**
@@ -70,13 +73,26 @@ It is being continuously improved as part of our learning process. Future update
 
 ---
 
-<img width="1163" height="639" alt="Screenshot 2025-12-29 003308" src="https://github.com/user-attachments/assets/b2a8942e-7dbf-42d4-bd68-85fd94bad74b" />
+<img width="1350" height="638" alt="Screenshot (57)" src="https://github.com/user-attachments/assets/bcf5b3d9-8dd6-46aa-9dac-f5d49ddee9da" />
 
 ---
 
-<img width="1366" height="635" alt="Screenshot (59)" src="https://github.com/user-attachments/assets/0f63e684-0c70-4f48-93c2-50be3264f07e" />
+<img width="1348" height="640" alt="Screenshot (58)" src="https://github.com/user-attachments/assets/a290dd31-3cff-4ad0-aa41-d1421459e17c" />
 
+
+---
+
+<img width="1366" height="635" alt="Screenshot (59)" src="https://github.com/user-attachments/assets/7102582c-44d3-4cb0-8fe1-f1ff607be497" />
+
+
+---
 
 **Admin side**
+
+<img width="1366" height="638" alt="Screenshot (61)" src="https://github.com/user-attachments/assets/948a752f-2e8c-44e2-b5e7-2535ed5fcb0c" />
+
+---
+
+<img width="1366" height="631" alt="Screenshot (60)" src="https://github.com/user-attachments/assets/8b03d771-86a4-41e6-8657-bc2b91869680" />
 
 
