@@ -1,0 +1,38 @@
+/* Original classes kept for compatibility */
+.wrapper { border:1px solid black; padding:1%; width:80%; margin:0 auto; }
+.main-content { background-color:#f1f2f6; min-height:calc(100vh - 60px); padding:3% 0; }
+.col-4 { width:27%; background-color:#fff; margin:1%; padding:2%; float:left; }
+
+/* Dashboard layout */
+.dash-wrapper { width:90%; max-width:1100px; margin:0 auto; padding:20px; }
+.dash-title { text-align:center; color:#333; margin-bottom:30px; font-size:28px; }
+
+/* Stat cards row */
+.cards-row { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; margin-bottom:35px; }
+.stat-card { background:#fff; border-radius:10px; padding:25px 20px; width:160px; text-align:center; box-shadow:0 3px 12px rgba(0,0,0,0.1); border-top:4px solid #ccc; transition:transform 0.2s; }
+.stat-card:hover { transform:translateY(-4px); }
+.card-icon { font-size:32px; margin-bottom:10px; }
+.card-number { font-size:22px; font-weight:bold; color:#333; margin-bottom:6px; word-break:break-all; }
+.card-label { font-size:13px; color:#666; }
+
+/* Card accent colours */
+.card-blue   { border-top-color:#2196f3; }
+.card-orange { border-top-color:#f25d07; }
+.card-green  { border-top-color:#4caf50; }
+.card-yellow { border-top-color:#ffc107; }
+.card-teal   { border-top-color:#009688; }
+.card-red    { border-top-color:#f44336; }
+
+/* Quick links */
+.quick-links { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:10px; }
+.quick-btn { display:inline-block; background:#f25d07; color:white; padding:10px 22px; border-radius:6px; text-decoration:none; font-size:14px; font-weight:bold; transition:background 0.2s; }
+.quick-btn:hover { background:#d44e04; }
+.quick-btn-red { background:#f44336; }
+.quick-btn-red:hover { background:#c62828; }
+
+@media (max-width:768px) {
+    .cards-row { gap:12px; }
+    .stat-card { width:130px; padding:18px 12px; }
+    .card-number { font-size:18px; }
+    .quick-links { flex-direction:column; align-items:center; }
+}

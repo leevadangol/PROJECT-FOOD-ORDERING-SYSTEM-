@@ -1,32 +1,25 @@
 <?php
+/*
+    CONFIRM ORDER (confirm_order.php)
+    FIX: Was pasting $customer_id directly into the SQL string.
+    Now uses a prepared statement.
+*/
 require_once "check_login.php";
 require_once "db.php";
 
-if (!isset($_SESSION['customer_id'])) {
-    header("Location: login.php");
-    exit;
-}
-
 $customer_id = $_SESSION['customer_id'];
 
-/*
-  Update only pending orders
-*/
-$confirm_sql = "
-    UPDATE orders 
-    SET status = 'Confirmed' 
-    WHERE c_id = '$customer_id' 
-    AND status = 'Pending'
-";
+$stmt = mysqli_prepare($conn,
+    "UPDATE orders SET status = 'Confirmed' WHERE c_id = ? AND status = 'Pending'"
+);
+mysqli_stmt_bind_param($stmt, "i", $customer_id);
+mysqli_stmt_execute($stmt);
 
-$result = mysqli_query($conn, $confirm_sql);
-
-if ($result && mysqli_affected_rows($conn) > 0) {
+if (mysqli_stmt_affected_rows($stmt) > 0) {
     $_SESSION['order_confirmed'] = true;
 } else {
     $_SESSION['order_confirmed'] = false;
 }
 
 header("Location: myorder.php");
-exit;
-?>
+exit();

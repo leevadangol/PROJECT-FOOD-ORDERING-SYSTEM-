@@ -1,10 +1,19 @@
 <?php
+/*
+    BURGER CATEGORY PAGE (burger.php)
+    Now DYNAMIC - reads all BURGER items from the database.
+    Any food added via the admin panel with category="Burger"
+    will automatically appear here.
+*/
 include "searchbox.php";
 require_once "check_login.php";
+require_once "db.php";
+
+$sql    = "SELECT * FROM foods WHERE category = 'Burger' ORDER BY f_id ASC";
+$result = mysqli_query($conn, $sql);
 ?>
 
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,166 +21,44 @@ require_once "check_login.php";
   <link rel="stylesheet" href="CSS/food-menu_style.css" />
   <link rel="stylesheet" href="CSS/home_style.css" />
 </head>
-
 <body>
   <section class="food-menu">
     <div class="container">
       <h2 class="text-center">BURGER</h2>
 
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/cheese.jpeg"
-            alt="cheese burger"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>CHEESE BURGER</h4>
-          <p class="food-price">Rs. 550</p>
-          <p class="food-detail">
-            A classic cheeseburger featuring a juicy beef patty, melted
-            cheese, and fresh toppings. Served on a warm, toasted bun for the
-            perfect bite every time.
-          </p>
-          <br />
-          <a href="order.php?id=1" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
+      <?php if (mysqli_num_rows($result) > 0): ?>
+        <?php while ($food = mysqli_fetch_assoc($result)): ?>
+          <div class="food-menu-box zoom-box">
+            <div class="food-menu-img">
+              <img
+                src="<?php echo htmlspecialchars($food['image']); ?>"
+                alt="<?php echo htmlspecialchars($food['f_name']); ?>"
+                class="img-responsive" />
+            </div>
+            <div class="food-menu-disc">
+              <h4><?php echo htmlspecialchars($food['f_name']); ?>&nbsp;&nbsp;
+                <span class="food-price">Rs. <?php echo htmlspecialchars($food['price']); ?></span>
+              </h4>
+              <?php if (!empty($food['description'])): ?>
+                <p class="food-detail"><?php echo htmlspecialchars($food['description']); ?></p>
+              <?php endif; ?>
+              <br />
+              <a href="order.php?id=<?php echo (int)$food['f_id']; ?>"
+                 class="btn btn-primary btn-order">ORDER</a>
+            </div>
+            <div class="clear-fix"></div>
+          </div>
+        <?php endwhile; ?>
+      <?php else: ?>
+        <p style="text-align:center; color:#888; padding:40px;">
+          No BURGER items available at the moment.
+        </p>
+      <?php endif; ?>
 
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/bbq.jpeg"
-            alt="bbq burger"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>BBQ BURGER</h4>
-          <p class="food-price">Rs. 550</p>
-          <p class="food-detail">
-            A bold BBQ burger loaded with smoky sauce, melted cheese, and
-            crispy onion rings. Grilled to perfection and packed with sweet,
-            savory flavor in every bite.
-          </p>
-          <br />
-          <a href="order.php?id=2" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
-
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/chicken.jpeg"
-            alt="chicken burger"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>CHICKEN BURGER</h4>
-          <p class="food-price">Rs. 470</p>
-          <p class="food-detail">
-            A juicy, seasoned chicken patty paired with crisp lettuce and
-            creamy sauce. Served on a soft, toasted bun for a deliciously
-            satisfying bite.
-          </p>
-          <br />
-          <a href="order.php?id=3" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
-
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/fish.jpeg"
-            alt="fish burger"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>FISH BURGER</h4>
-          <p class="food-price">Rs. 450</p>
-          <p class="food-detail">
-            A crispy, golden fish fillet with tender flakes inside, topped
-            with tartar sauce and fresh lettuce. Served in a soft bun for a
-            light yet flavorful seafood delight.
-          </p>
-          <br />
-          <a href="order.php?id=4" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
-
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/keto.jpeg"
-            alt="keto burger"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>KETO BURGER</h4>
-          <p class="food-price">Rs. 450</p>
-          <p class="food-detail">
-            A juicy, protein-packed burger with cheese, veggies, and savory
-            toppings, wrapped in crisp lettuce or a keto bun. Perfect for
-            low-carb lifestyles without sacrificing flavor.
-          </p>
-          <br />
-
-          <a href="order.php?id=5" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
-
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/Paneer.jpeg"
-            alt="paneer burger"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>PANEER BURGER</h4>
-          <p class="food-price">Rs. 450</p>
-          <p class="food-detail">
-            A flavorful paneer burger with a spiced, grilled cottage cheese
-            patty and zesty chutneys. Layered with fresh veggies and served in
-            a soft, toasted bun for a tasty vegetarian treat.
-          </p>
-          <br />
-          <a href="order.php?id=6" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
-
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/veg.jpeg"
-            alt="veg burger"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>VEG BURGER</h4>
-          <p class="food-price">Rs. 400</p>
-          <p class="food-detail">
-            A wholesome veg burger featuring a tasty patty made from mixed
-            vegetables, grains, or legumes. Topped with fresh veggies and
-            sauces, all tucked into a soft, toasted bun.
-          </p>
-          <br />
-          <a href="order.php?id=7" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
       <div class="clear-fix"></div>
     </div>
   </section>
+
+  <?php include "footer.php"; ?>
 </body>
 </html>
-
-<!-- ---footer--- -->
-<?php
-include "footer.php";
-?>

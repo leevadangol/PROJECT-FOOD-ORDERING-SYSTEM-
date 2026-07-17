@@ -1,10 +1,20 @@
 <?php
+/*
+    PIZZA CATEGORY PAGE (pizza.php)
+    Now DYNAMIC - reads all Pizza items from the database.
+    Any food added via the admin panel with category="Pizza"
+    will automatically appear here.
+*/
 include "searchbox.php";
 require_once "check_login.php";
+require_once "db.php";
+
+// Fetch all foods where category = 'Pizza', ordered by food ID
+$sql    = "SELECT * FROM foods WHERE category = 'Pizza' ORDER BY f_id ASC";
+$result = mysqli_query($conn, $sql);
 ?>
 
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,142 +22,44 @@ require_once "check_login.php";
   <link rel="stylesheet" href="CSS/food-menu_style.css" />
   <link rel="stylesheet" href="CSS/home_style.css" />
 </head>
-
 <body>
   <section class="food-menu">
     <div class="container">
       <h2 class="text-center">PIZZA</h2>
 
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/Pepperoni Pizza1.jpeg"
-            alt="Pepperoni pizza"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>PEPPERONIE PIZZA</h4>
-          <p class="food-price">Rs. 550</p>
-          <p class="food-detail">
-            A classic favourite, topped with melted cheese, zesty tomato
-            sauce,and savory Pepperoni slices on a perfectly based crust.
-          </p>
-          <br />
-          <a href="order.php?id=8" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
+      <?php if (mysqli_num_rows($result) > 0): ?>
+        <?php while ($food = mysqli_fetch_assoc($result)): ?>
+          <div class="food-menu-box zoom-box">
+            <div class="food-menu-img">
+              <img
+                src="<?php echo htmlspecialchars($food['image']); ?>"
+                alt="<?php echo htmlspecialchars($food['f_name']); ?>"
+                class="img-responsive" />
+            </div>
+            <div class="food-menu-disc">
+              <h4><?php echo htmlspecialchars($food['f_name']); ?>&nbsp;&nbsp;
+                <span class="food-price">Rs. <?php echo htmlspecialchars($food['price']); ?></span>
+              </h4>
+              <?php if (!empty($food['description'])): ?>
+                <p class="food-detail"><?php echo htmlspecialchars($food['description']); ?></p>
+              <?php endif; ?>
+              <br />
+              <a href="order.php?id=<?php echo (int)$food['f_id']; ?>"
+                 class="btn btn-primary btn-order">ORDER</a>
+            </div>
+            <div class="clear-fix"></div>
+          </div>
+        <?php endwhile; ?>
+      <?php else: ?>
+        <p style="text-align:center; color:#888; padding:40px;">
+          No pizza items available at the moment.
+        </p>
+      <?php endif; ?>
 
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/Chicken pizza.jpeg"
-            alt="Chicken pizza"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>CHICKEN PIZZA</h4>
-          <p class="food-price">Rs. 550</p>
-          <p class="food-detail">
-            It features a soft, savory dough topped with tender chicken and
-            rich, zesty sauce. Melted cheese adds a creamy finish to every
-            delicious bite.
-          </p>
-          <br />
-          <a href="order.php?id=9" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
-
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/Meat Lover Pizza.jpeg"
-            alt="meat lover pizza"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>MEAT LOVER PIZZA</h4>
-          <p class="food-price">Rs. 600</p>
-          <p class="food-detail">
-            A carnivore's dream, pilled with savory meats like Pepperoni,
-            sausage, ham, and bacon on a cheezy base.
-          </p>
-          <br />
-          <a href="order.php?id=10" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
-
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/mushroom pizza.jpeg"
-            alt="mushroom pizza"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>MUSHROOM PIZZA</h4>
-          <p class="food-price">Rs. 450</p>
-          <p class="food-detail">
-            It offers a rich, earthy flavor with a generous topping of fresh
-            mushrooms. Melted cheese and a crispy crust complete this savory
-            delight.
-          </p>
-          <br />
-          <a href="order.php?id=11" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
-
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/Veg-pizza.jpeg"
-            alt="veg pizza"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>VEG PIZZA</h4>
-          <p class="food-price">Rs. 400</p>
-          <p class="food-detail">
-            It is loaded with a colorful variety of fresh vegetables and rich
-            tomato sauce. Topped with gooey cheese on a soft yet crispy crust,
-            it's a perfect vegetarian treat.
-          </p>
-          <br />
-          <a href="order.php?id=12" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
-
-      <div class="food-menu-box zoom-box">
-        <div class="food-menu-img">
-          <img
-            src="IMAGES/pineapple pizza.jpeg"
-            alt="pineapple pizza"
-            class="img-responsive" />
-        </div>
-        <div class="food-menu-disc">
-          <h4>PINEAPPLE PIZZA</h4>
-          <p class="food-price">Rs. 400</p>
-          <p class="food-detail">
-            It blends sweet pineapple chunks with savory toppings for a bold
-            flavor contrast. Served on a cheesy base, it's a sweet-and-salty
-            twist on the classic pizza.
-          </p>
-          <br />
-          <a href="order.php?id=13" class="btn btn-primary btn-order">ORDER</a>
-        </div>
-        <div class="clear-fix"></div>
-      </div>
       <div class="clear-fix"></div>
     </div>
   </section>
+
+  <?php include "footer.php"; ?>
 </body>
 </html>
-
-<!-- ---footer--- -->
-<?php
-include "footer.php";
-?>

@@ -6,6 +6,29 @@ require_once "db.php";
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+  /* ============================================================
+     STEP 1: CHECK THE CAPTCHA
+     ============================================================
+     Same idea as login.php - we check the captcha FIRST, before
+     we even look at the database. If it's wrong, we send the
+     user straight back with an error and a brand new code.
+  */
+  $entered_captcha = trim($_POST['captcha'] ?? '');
+  $correct_captcha = $_SESSION['captcha_code'] ?? '';
+
+  // Remove the old code right away so each code can only be used once
+  unset($_SESSION['captcha_code']);
+
+  if ($entered_captcha === '' || strcasecmp($entered_captcha, $correct_captcha) !== 0) {
+    header("Location: signup.php?error=" . urlencode("Incorrect captcha code. Please try again."));
+    exit();
+  }
+
+  /* ============================================================
+     STEP 2: NORMAL SIGNUP LOGIC (captcha already passed)
+     ============================================================
+  */
   $username = $_POST['username'];
   $email = $_POST['email'];
   $phone = $_POST['phone'];
@@ -14,8 +37,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
   /// Check if username already exists
-  $checkSql = "SELECT * FROM signup_page WHERE c_username = '$username'";
-  $checkResult = mysqli_query($conn, $checkSql);
+  // (Using a prepared statement with "?" instead of pasting $username
+  //  straight into the SQL text - this stops SQL Injection attacks.)
+  $checkSql = "SELECT * FROM signup_page WHERE c_username = ?";
+  $checkStmt = mysqli_prepare($conn, $checkSql);
+  mysqli_stmt_bind_param($checkStmt, "s", $username);
+  mysqli_stmt_execute($checkStmt);
+  $checkResult = mysqli_stmt_get_result($checkStmt);
 
   if (mysqli_num_rows($checkResult) > 0) {
     mysqli_close($conn);
@@ -26,11 +54,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Hash the password
   $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-
-  $query = "INSERT INTO signup_page (c_username, email,phone, password)
-                VALUES ('$username', '$email','$phone', '$hashedPassword');";
-
-  $result = mysqli_query($conn, $query);
+  // Again using "?" placeholders instead of pasting values into the SQL text
+  $query = "INSERT INTO signup_page (c_username, email, phone, password)
+                VALUES (?, ?, ?, ?)";
+  $stmt = mysqli_prepare($conn, $query);
+  mysqli_stmt_bind_param($stmt, "ssss", $username, $email, $phone, $hashedPassword);
+  $result = mysqli_stmt_execute($stmt);
 
   if ($result) {
     $_SESSION['username'] = $username;
@@ -106,13 +135,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         class="input-disc"
         placeholder="Enter Confirm Password" />
 
+      <!-- ===================== CAPTCHA SECTION ===================== -->
+      <!-- Same captcha.php image used on login.php. It draws a new
+           random code every time it's loaded. -->
+      <label for="captcha">Enter the code below</label>
+      <div class="captcha-box">
+        <img src="captcha.php" id="captchaImg" alt="CAPTCHA code">
+        <a href="#" id="refreshCaptcha" title="Get a new code">&#x21bb; Refresh</a>
+      </div>
+      <input
+        type="text"
+        id="captcha"
+        name="captcha"
+        class="input-disc"
+        placeholder="Enter the code above"
+        autocomplete="off" />
+      <!-- =================== END CAPTCHA SECTION ==================== -->
+
 
       <button type="submit" class="signup-btn">Sign Up</button>
       <br /><br />
       <p id="error">
         <?php     //FOR USER EXIST
         if (isset($_GET['error'])) {
-          echo $_GET['error'];
+          echo htmlspecialchars($_GET['error']);
         }
         ?>
       </p>
@@ -136,6 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       const email = formData.get("email");
       const password = formData.get("password");
       const confirmPassword = formData.get("confirmPassword");
+      const captcha = formData.get("captcha");
 
       //for username
       if (!username) {
@@ -191,6 +238,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         return;
       }
 
+      //for captcha
+      if (!captcha) {
+        document.getElementById("error").textContent =
+          "*Please enter the captcha code";
+        return;
+      }
+
       console.log({
         username,
         // userType,
@@ -200,6 +254,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       form.submit(); //action chalaunxa, without this action="home.html" chaldaina
     }
+
+    // Refresh button - loads a brand new captcha picture without
+    // reloading the whole page (same as login.php)
+    document.getElementById('refreshCaptcha').addEventListener('click', function (e) {
+      e.preventDefault();
+      document.getElementById('captchaImg').src = 'captcha.php?t=' + new Date().getTime();
+    });
   </script>
 </body>
 
