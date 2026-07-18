@@ -31,6 +31,9 @@ if (isset($_GET['delete_id'])) {
 }
 
 // ---- ADD FOOD ----
+// Show success message from a-foodedit.php redirect
+if (isset($_GET['msg'])) { $msg = urldecode($_GET['msg']); }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
     $f_name   = trim($_POST['f_name']);
     $price    = floatval($_POST['price']);
@@ -241,7 +244,7 @@ $foods_result = mysqli_query($conn,
                         <?php if (strlen($food['description'] ?? '') > 60) echo '...'; ?>
                     </td>
                     <td style="white-space:nowrap;">
-                        <a href="a-foodmanage.php?edit_id=<?php echo $food['f_id']; ?>"
+                        <a href="a-foodedit.php?f_id=<?php echo $food['f_id']; ?>"
                            class="btn-info" style="font-size:12px;">Edit</a>
                         &nbsp;
                         <a href="a-foodmanage.php?delete_id=<?php echo $food['f_id']; ?>"

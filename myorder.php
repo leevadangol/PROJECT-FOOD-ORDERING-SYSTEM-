@@ -2,13 +2,13 @@
 include "header.php";
 require_once "check_login.php";
 require_once "db.php";
-
+ 
 $customer_id   = $_SESSION['customer_id'];
 $customer_name = $_SESSION['username'];
-
+ 
 $success_message = isset($_GET['success']) ? urldecode($_GET['success']) : '';
 $error_message   = isset($_GET['error'])   ? urldecode($_GET['error'])   : '';
-
+ 
 // Only show ACTIVE orders - hide Completed and Cancelled
 $orders_sql = "SELECT
     o.o_id,
@@ -19,9 +19,9 @@ FROM orders o
 WHERE o.c_id = '$customer_id'
   AND o.status NOT IN ('Completed', 'Cancelled')
 ORDER BY o.o_datetime DESC";
-
+ 
 $orders_result = mysqli_query($conn, $orders_sql);
-
+ 
 // Load saved addresses for this customer
 $addr_result     = mysqli_query($conn,
     "SELECT * FROM saved_addresses WHERE c_id = '$customer_id' ORDER BY created_at DESC");
@@ -138,7 +138,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
 <body>
 <section class="order-container">
   <h2 class="text-center">My Orders</h2>
-
+ 
   <?php if (!empty($success_message)): ?>
     <div class="success-message"><?= htmlspecialchars($success_message); ?></div>
   <?php endif; ?>
@@ -151,7 +151,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
     <div class="success-message">Your order is confirmed ✅</div>
     <?php unset($_SESSION['order_confirmed']); ?>
   <?php endif; ?>
-
+ 
   <!-- ===== ORDERS TABLE (only when there are active orders) ===== -->
   <?php if ($orders_result && mysqli_num_rows($orders_result) > 0): ?>
     <table class="orders-table">
@@ -170,12 +170,17 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
         $ordersTotal = 0;
         while ($order = mysqli_fetch_assoc($orders_result)):
           $ordersTotal += $order['total_price'];
-
+ 
           $items_sql    = "SELECT oi.*, f.f_name, f.price
                            FROM order_items oi
                            JOIN foods f ON oi.f_id = f.f_id
                            WHERE oi.o_id = {$order['o_id']}";
           $items_result = mysqli_query($conn, $items_sql);
+ 
+          // Get quantity for +/- controls
+          $qty_row  = mysqli_fetch_assoc(mysqli_query($conn,
+              "SELECT quantity FROM order_items WHERE o_id = {$order['o_id']} LIMIT 1"));
+          $item_qty = $qty_row['quantity'] ?? 1;
         ?>
           <tr>
             <td>
@@ -183,19 +188,34 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
                 echo htmlspecialchars($item['f_name']);
               endwhile; ?>
             </td>
+            <!-- Quantity column with inline - / + controls -->
             <td>
-              <?php
-              $items_qty = mysqli_query($conn, $items_sql);
-              while ($item = mysqli_fetch_assoc($items_qty)):
-                echo $item['quantity'] . "<br>";
-              endwhile; ?>
+              <?php if ($order['status'] === 'Pending'): ?>
+                <div style="display:inline-flex; align-items:center; gap:6px;">
+                  <a href="update_qty.php?o_id=<?= $order['o_id'] ?>&action=decrease"
+                     style="display:inline-flex; align-items:center; justify-content:center;
+                            width:28px; height:28px; background:#f25d07; color:white;
+                            border-radius:50%; text-decoration:none; font-size:18px;
+                            font-weight:bold; line-height:1;">&#8722;</a>
+                  <span style="font-size:16px; font-weight:bold; min-width:22px; text-align:center;">
+                    <?= $item_qty ?>
+                  </span>
+                  <a href="update_qty.php?o_id=<?= $order['o_id'] ?>&action=increase"
+                     style="display:inline-flex; align-items:center; justify-content:center;
+                            width:28px; height:28px; background:#f25d07; color:white;
+                            border-radius:50%; text-decoration:none; font-size:18px;
+                            font-weight:bold; line-height:1;">&#43;</a>
+                </div>
+              <?php else: ?>
+                <?= $item_qty ?>
+              <?php endif; ?>
             </td>
             <td>Rs. <?= number_format($order['total_price'],2); ?></td>
             <td><?= date("Y-m-d H:i:s", strtotime($order['o_datetime'])); ?></td>
             <td><?= htmlspecialchars($order['status']); ?></td>
+            <!-- DELETE button stays exactly as original -->
             <td>
               <?php if ($order['status'] === 'Pending'): ?>
-                <a href="change_item.php?id=<?= $order['o_id'] ?>" class="btn-change">CHANGE</a>
                 <a href="delete_item.php?o_id=<?= $order['o_id'] ?>" class="btn-delete">DELETE</a>
               <?php else: ?>
                 <span style="font-size:12px; color:#888;">Processing...</span>
@@ -213,7 +233,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
       </tfoot>
     </table>
   <?php endif; ?>
-
+ 
   <!-- =====================================================
        CUSTOMER DETAILS + ADDRESS FORM
        Always shown so customers can pre-fill details.
@@ -221,11 +241,11 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
   ====================================================== -->
   <div style="background:#fff3ec; border:1px solid #f25d07; border-radius:8px;
               padding:22px; margin-top:10px;">
-
+ 
     <h3 style="color:#f25d07; margin:0 0 18px 0; font-size:17px;">
       &#128203; Fill Your Details to Confirm Order
     </h3>
-
+ 
     <!-- SAVED ADDRESS SELECTOR -->
     <?php if (!empty($saved_addresses)): ?>
     <div style="background:#fffaf7; border:1px solid #f7c9aa; border-radius:6px;
@@ -257,10 +277,10 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
       </button>
     </div>
     <?php endif; ?>
-
+ 
     <!-- DETAILS FORM -->
     <form action="update_order_details.php" method="POST" id="detailsForm">
-
+ 
       <!-- Row 1: Full Name + Phone -->
       <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:12px;">
         <div style="flex:1; min-width:180px;">
@@ -282,7 +302,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
                         border-radius:5px; font-size:14px; box-sizing:border-box;">
         </div>
       </div>
-
+ 
       <!-- Row 2: Address -->
       <p style="font-weight:bold; color:#555; font-size:14px; margin:0 0 8px 0;">
         &#127968; Delivery Address
@@ -316,7 +336,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
                         border-radius:5px; font-size:14px; box-sizing:border-box;">
         </div>
       </div>
-
+ 
       <!-- Row 3: Date & Time -->
       <div style="margin-bottom:15px;">
         <?php $now = date("Y-m-d\TH:i"); ?>
@@ -328,14 +348,14 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
                style="width:100%; padding:9px 12px; border:1px solid #ccc;
                       border-radius:5px; font-size:14px; box-sizing:border-box;">
       </div>
-
+ 
       <!-- Save address checkbox -->
       <label style="font-size:13px; color:#555; display:flex; align-items:center; gap:8px; margin-bottom:18px;">
         <input type="checkbox" name="save_address" value="1" checked
                style="width:16px; height:16px; cursor:pointer;">
         Save this address for future orders
       </label>
-
+ 
       <!-- ===== PAYMENT METHOD ===== -->
       <p style="font-weight:bold; color:#555; font-size:14px; margin:0 0 10px 0;">
         &#128179; Payment Method *
@@ -350,7 +370,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
           &#128181; Cash on Delivery
         </label>
       </div>
-
+ 
       <!-- Submit button (label changes based on selection) -->
       <button type="submit" id="submitBtn"
               style="width:100%; background:#f25d07; color:white; padding:13px;
@@ -360,9 +380,9 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
       </button>
     </form>
   </div>
-
+ 
 </section>
-
+ 
 <script>
   // Auto-fill form when saved address is selected
   function fillSavedAddress() {
@@ -375,7 +395,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
     document.getElementById('inp_landmark').value = opt.getAttribute('data-landmark');
     document.getElementById('inp_house').value    = opt.getAttribute('data-house');
   }
-
+ 
   // Update button label when payment method changes
   document.querySelectorAll('input[name="payment_method"]').forEach(function(radio) {
     radio.addEventListener('change', function() {
