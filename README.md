@@ -44,9 +44,7 @@ The MySQL script used in this project is available in the repository as <a href=
 
 **Notes:**
 
-This project is still under development, so some features may not be fully functional yet.
-It is being continuously improved as part of our learning process. Future updates will include more features and better performance.
-
+This project is actively being developed and regularly updated. Recent improvements include eSewa payment integration, enhanced admin pages, updated customer-side features, and overall performance and UI enhancements. Future updates will focus on additional features, security improvements, and further optimization.
 
 **This project is done by Leeza Dangol and Leeva Dangol as our 4th semester project for BCA**
 
