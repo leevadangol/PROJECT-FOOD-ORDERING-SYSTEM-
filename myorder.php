@@ -2,13 +2,13 @@
 include "header.php";
 require_once "check_login.php";
 require_once "db.php";
- 
+
 $customer_id   = $_SESSION['customer_id'];
 $customer_name = $_SESSION['username'];
- 
+
 $success_message = isset($_GET['success']) ? urldecode($_GET['success']) : '';
 $error_message   = isset($_GET['error'])   ? urldecode($_GET['error'])   : '';
- 
+
 // Only show ACTIVE orders - hide Completed and Cancelled
 $orders_sql = "SELECT
     o.o_id,
@@ -19,9 +19,9 @@ FROM orders o
 WHERE o.c_id = '$customer_id'
   AND o.status NOT IN ('Completed', 'Cancelled')
 ORDER BY o.o_datetime DESC";
- 
+
 $orders_result = mysqli_query($conn, $orders_sql);
- 
+
 // Load saved addresses for this customer
 $addr_result     = mysqli_query($conn,
     "SELECT * FROM saved_addresses WHERE c_id = '$customer_id' ORDER BY created_at DESC");
@@ -138,7 +138,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
 <body>
 <section class="order-container">
   <h2 class="text-center">My Orders</h2>
- 
+
   <?php if (!empty($success_message)): ?>
     <div class="success-message"><?= htmlspecialchars($success_message); ?></div>
   <?php endif; ?>
@@ -151,7 +151,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
     <div class="success-message">Your order is confirmed ✅</div>
     <?php unset($_SESSION['order_confirmed']); ?>
   <?php endif; ?>
- 
+
   <!-- ===== ORDERS TABLE (only when there are active orders) ===== -->
   <?php if ($orders_result && mysqli_num_rows($orders_result) > 0): ?>
     <table class="orders-table">
@@ -170,13 +170,13 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
         $ordersTotal = 0;
         while ($order = mysqli_fetch_assoc($orders_result)):
           $ordersTotal += $order['total_price'];
- 
+
           $items_sql    = "SELECT oi.*, f.f_name, f.price
                            FROM order_items oi
                            JOIN foods f ON oi.f_id = f.f_id
                            WHERE oi.o_id = {$order['o_id']}";
           $items_result = mysqli_query($conn, $items_sql);
- 
+
           // Get quantity for +/- controls
           $qty_row  = mysqli_fetch_assoc(mysqli_query($conn,
               "SELECT quantity FROM order_items WHERE o_id = {$order['o_id']} LIMIT 1"));
@@ -233,7 +233,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
       </tfoot>
     </table>
   <?php endif; ?>
- 
+
   <!-- =====================================================
        CUSTOMER DETAILS + ADDRESS FORM
        Always shown so customers can pre-fill details.
@@ -241,11 +241,11 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
   ====================================================== -->
   <div style="background:#fff3ec; border:1px solid #f25d07; border-radius:8px;
               padding:22px; margin-top:10px;">
- 
+
     <h3 style="color:#f25d07; margin:0 0 18px 0; font-size:17px;">
       &#128203; Fill Your Details to Confirm Order
     </h3>
- 
+
     <!-- SAVED ADDRESS SELECTOR -->
     <?php if (!empty($saved_addresses)): ?>
     <div style="background:#fffaf7; border:1px solid #f7c9aa; border-radius:6px;
@@ -277,10 +277,10 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
       </button>
     </div>
     <?php endif; ?>
- 
+
     <!-- DETAILS FORM -->
     <form action="update_order_details.php" method="POST" id="detailsForm">
- 
+
       <!-- Row 1: Full Name + Phone -->
       <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:12px;">
         <div style="flex:1; min-width:180px;">
@@ -302,7 +302,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
                         border-radius:5px; font-size:14px; box-sizing:border-box;">
         </div>
       </div>
- 
+
       <!-- Row 2: Address -->
       <p style="font-weight:bold; color:#555; font-size:14px; margin:0 0 8px 0;">
         &#127968; Delivery Address
@@ -336,7 +336,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
                         border-radius:5px; font-size:14px; box-sizing:border-box;">
         </div>
       </div>
- 
+
       <!-- Row 3: Date & Time -->
       <div style="margin-bottom:15px;">
         <?php $now = date("Y-m-d\TH:i"); ?>
@@ -348,14 +348,67 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
                style="width:100%; padding:9px 12px; border:1px solid #ccc;
                       border-radius:5px; font-size:14px; box-sizing:border-box;">
       </div>
- 
+
       <!-- Save address checkbox -->
       <label style="font-size:13px; color:#555; display:flex; align-items:center; gap:8px; margin-bottom:18px;">
         <input type="checkbox" name="save_address" value="1" checked
                style="width:16px; height:16px; cursor:pointer;">
         Save this address for future orders
       </label>
- 
+
+      <!-- ===== DELIVERY LOCATION + FEE ===== -->
+      <p style="font-weight:bold; color:#555; font-size:14px; margin:0 0 10px 0;">
+        &#128661; Delivery Location
+      </p>
+      <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
+        <label style="flex:1; min-width:180px; border:2px solid #ccc; border-radius:8px;
+                      padding:14px 16px; cursor:pointer; display:flex; align-items:center;
+                      gap:10px; font-size:14px; font-weight:bold; transition:border-color 0.2s;"
+               id="card_inside">
+          <input type="radio" name="delivery_location" value="inside" id="loc_inside"
+                 style="width:16px; height:16px; cursor:pointer;" checked
+                 onchange="updateDeliveryFee()">
+          <span>&#128205; Inside Ringroad &nbsp;<strong style="color:#f25d07;">+ Rs. 100</strong></span>
+        </label>
+        <label style="flex:1; min-width:180px; border:2px solid #ccc; border-radius:8px;
+                      padding:14px 16px; cursor:pointer; display:flex; align-items:center;
+                      gap:10px; font-size:14px; font-weight:bold; transition:border-color 0.2s;"
+               id="card_outside">
+          <input type="radio" name="delivery_location" value="outside" id="loc_outside"
+                 style="width:16px; height:16px; cursor:pointer;"
+                 onchange="updateDeliveryFee()">
+          <span>&#128205; Outside Ringroad &nbsp;<strong style="color:#f25d07;">+ Rs. 150</strong></span>
+        </label>
+      </div>
+
+      <!-- Order total breakdown -->
+      <?php
+        // Calculate food subtotal (sum of all pending orders)
+        $sub_res   = mysqli_query($conn,
+            "SELECT COALESCE(SUM(total_price),0) AS sub FROM orders
+             WHERE c_id='$customer_id' AND status='Pending'");
+        $food_subtotal = mysqli_fetch_assoc($sub_res)['sub'];
+      ?>
+      <div style="background:#fff; border:1px solid #f7c9aa; border-radius:8px;
+                  padding:14px 18px; margin-bottom:15px; font-size:14px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span style="color:#555;">Food Subtotal</span>
+          <span>Rs. <?= number_format($food_subtotal, 2); ?></span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span style="color:#555;">Delivery Fee</span>
+          <span id="deliveryFeeDisplay">Rs. 100.00</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #eee; margin:8px 0;">
+        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:16px;">
+          <span style="color:#f25d07;">Grand Total</span>
+          <span id="grandTotalDisplay" style="color:#f25d07;">
+            Rs. <?= number_format($food_subtotal + 100, 2); ?>
+          </span>
+        </div>
+      </div>
+      <input type="hidden" name="delivery_fee" id="deliveryFeeInput" value="100">
+
       <!-- ===== PAYMENT METHOD ===== -->
       <p style="font-weight:bold; color:#555; font-size:14px; margin:0 0 10px 0;">
         &#128179; Payment Method *
@@ -370,7 +423,7 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
           &#128181; Cash on Delivery
         </label>
       </div>
- 
+
       <!-- Submit button (label changes based on selection) -->
       <button type="submit" id="submitBtn"
               style="width:100%; background:#f25d07; color:white; padding:13px;
@@ -380,9 +433,9 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
       </button>
     </form>
   </div>
- 
+
 </section>
- 
+
 <script>
   // Auto-fill form when saved address is selected
   function fillSavedAddress() {
@@ -395,8 +448,28 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
     document.getElementById('inp_landmark').value = opt.getAttribute('data-landmark');
     document.getElementById('inp_house').value    = opt.getAttribute('data-house');
   }
- 
-  // Update button label when payment method changes
+
+  // ---- Delivery fee live update ----
+  var foodSubtotal = <?php echo $food_subtotal ?? 0; ?>;
+
+  function updateDeliveryFee() {
+    var isOutside   = document.getElementById('loc_outside').checked;
+    var fee         = isOutside ? 150 : 100;
+    var grandTotal  = foodSubtotal + fee;
+
+    document.getElementById('deliveryFeeDisplay').textContent = 'Rs. ' + fee.toFixed(2);
+    document.getElementById('grandTotalDisplay').textContent  = 'Rs. ' + grandTotal.toFixed(2);
+    document.getElementById('deliveryFeeInput').value = fee;
+
+    // Highlight selected card
+    document.getElementById('card_inside').style.borderColor  = isOutside ? '#ccc' : '#f25d07';
+    document.getElementById('card_outside').style.borderColor = isOutside ? '#f25d07' : '#ccc';
+  }
+
+  // Run once on page load to set correct highlight
+  updateDeliveryFee();
+
+  // ---- Payment method button label change ----
   document.querySelectorAll('input[name="payment_method"]').forEach(function(radio) {
     radio.addEventListener('change', function() {
       var btn = document.getElementById('submitBtn');
@@ -409,6 +482,26 @@ $saved_addresses = mysqli_fetch_all($addr_result, MYSQLI_ASSOC);
       }
     });
   });
+
+  // Update delivery fee and grand total when location changes
+  var foodSubtotal = <?= $food_subtotal ?? 0; ?>;
+
+  function updateDeliveryFee() {
+    var isInside   = document.getElementById('loc_inside').checked;
+    var fee        = isInside ? 100 : 150;
+    var grandTotal = foodSubtotal + fee;
+
+    document.getElementById('deliveryFeeDisplay').textContent = 'Rs. ' + fee.toFixed(2);
+    document.getElementById('grandTotalDisplay').textContent  = 'Rs. ' + grandTotal.toFixed(2);
+    document.getElementById('deliveryFeeInput').value         = fee;
+
+    // Highlight the selected card
+    document.getElementById('card_inside').style.borderColor  = isInside ? '#f25d07' : '#ccc';
+    document.getElementById('card_outside').style.borderColor = isInside ? '#ccc' : '#f25d07';
+  }
+
+  // Set initial highlight on page load
+  updateDeliveryFee();
 </script>
 </body>
 </html>
