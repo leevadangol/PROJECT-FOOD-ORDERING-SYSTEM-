@@ -1,0 +1,293 @@
+/* ALL CSS */
+* {
+  margin: 0 0;
+  padding: 0 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 1%;
+}
+
+.img-responsive {
+  width: 100%;
+}
+
+.img-curve {
+  border-radius: 40px;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-white {
+  color: white;
+}
+.clear-fix {
+  clear: both;
+  float: none;
+}
+
+a {
+  color: #f25d07; /* theme based color */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #f29f05;
+}
+
+.btn {
+  padding: 1%;
+  border: none;
+  font-size: small;
+  border-radius: 5px;
+}
+
+.btn-primary {
+  background-color: #f25d07;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #f29f05;
+  color: white;
+}
+
+
+h2 {
+  color: #f25d07;
+  font-size: 2rem;
+  margin-bottom: 2%;
+}
+
+.float-container {
+  position: relative;
+}
+
+.zoom-box {
+  transition: transform 0.3s ease; /* smooth zoom */
+}
+
+.zoom-box:hover {
+  transform: scale(1.1); /* zoom in */
+}
+
+.float-text {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%); /* perfectly centers horizontally */
+}
+/* ALL CSS ENDS  */
+
+/* NAVBAR */
+.logo {
+  width: 120px;
+  height: auto;
+  float: left;
+}
+
+.menu {
+  line-height: 70px;
+}
+.menu ul {
+  list-style-type: none;
+}
+
+.menu ul li {
+  display: inline;
+  padding: 7px;
+  font-weight: bold;
+}
+/* NAVBAR ENDS  */
+
+/* FOOD SEARCH */
+.food-search {
+  background-image: url(../IMAGES/background1.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 7% 0;
+}
+
+.food-search input[type="search"] {
+  width: 50%;
+  padding: 1%;
+  font-size: small;
+  border: none;
+  border-radius: 5px;
+}
+
+/* FOOD SEARCH ENDS  */
+
+/* CATEGORIES / explore foods */
+.categories {
+  padding: 4% 0;
+}
+
+.box {
+  width: 28%;
+  float: left;
+  margin: 2%;
+}
+
+/* CATEGORIES / explore foods ENDS  */
+
+/* ABOUT US  */
+.about-us {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("../IMAGES/background1.jpg");
+  background-size: cover;
+  background-position: center;
+  padding: 40px 20px;
+  color: white;
+  text-align: center;
+  min-height: 300px;    
+  position: relative;
+  margin-bottom: 40px;
+  margin-top: 80px;
+  z-index: 2;
+}
+.about-us p {
+  max-width: 700px;
+  margin: 10px auto;
+  line-height: 1.6;
+}
+
+/* ABOUT US ENDS  */
+
+/* SOCIALS */
+
+.social ul {
+  list-style-type: none;
+  justify-content: center;
+}
+
+.social ul li {
+  display: inline;
+  padding: 1%;
+}
+
+/* SOCIAL ENDS  */
+
+/* FOOTER */
+
+footer {
+  background-color: #f25d07;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding: 30px 60px;
+  font-family: "Poppins", sans-serif;
+  min-height: 150px;    
+  position: relative;
+  z-index: 2; 
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.footer-section {
+  width: 45%;
+  font-weight: bold;
+}
+
+.footer-section h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.footer-section i {
+  margin-right: 10px;
+  color: #fff;
+}
+
+.footer-section p {
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid #fff;
+  margin-top: 25px;
+  padding-top: 10px;
+  font-size: 13px;
+}
+
+.footer-bottom span {
+  color: #ffd797;
+  font-weight: bold;
+}
+
+/* FOOTER ENDS  */
+
+/* RESPONSIVE DESIGN*/
+@media only screen and (max-width: 768px) {
+  .logo {
+    width: 80%;
+    float: none;
+    margin: 1% auto;
+  }
+
+  .menu ul {
+    text-align: center;
+  }
+
+  .food-search input[type="search"] {
+    width: 90%;
+    padding: 2%;
+    margin-bottom: 3%;
+  }
+
+  .btn {
+    width: 91%;
+    padding: 2%;
+  }
+
+  .food-search {
+    padding: 10% 0;
+  }
+
+  .categories {
+    padding: 20% 0;
+  }
+  h2 {
+    margin-bottom: 10%;
+  }
+  .box {
+    width: 100%;
+    margin: 4% auto;
+  }
+
+  .social {
+    padding: 5% 0;
+  }
+  .order {
+    width: 100%;
+  }
+}
+/* RESPONSIVE DESIGN ENDS  */
